@@ -4,6 +4,7 @@ import {SignIn} from "../SignIn/SignIn";
 import {SignUp} from "../SignUp/SignUp";
 import Axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {Button} from "react-bootstrap";
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
 
     const [content, setContent] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const HOST = "http://localhost:3001";
 
@@ -23,12 +25,25 @@ function App() {
     useEffect(() => {
         Axios.get(HOST + '/sign-in')
             .then((response) => {
+                console.log(response);
                 setIsLoggedIn(response.data.loggedIn);
                 if (isLoggedIn) {
                     setContent(response.data.user[0].username);
                 }
             })
-    }, [isLoggedIn]);
+    }, []);
+
+    const handleCheckAuthenticatedStatus = () => {
+        Axios.get(HOST + '/isAuthenticated', {
+            headers: {
+                "x-access-token": localStorage.getItem("jwtToken")
+            }
+        })
+            .then((response) => {
+                console.log(response);
+            })
+    }
+
 
     const handleSignIn = (e) => {
         e.preventDefault();
@@ -36,14 +51,21 @@ function App() {
             username: username1,
             password: password1
         }).then((response) => {
+            console.log(response)
             setUsername1('');
             setPassword1('');
-            setContent(response.data.message);
-            setIsLoggedIn(true);
+            if (response.data.auth) {
+                setContent(response.data.message);
+                setIsLoggedIn(true);
+                localStorage.setItem("jwtToken", response.data.token);
+            } else {
+                setIsLoggedIn(false);
+            }
         }).catch((response) => {
             setUsername1('');
             setPassword1('');
             setContent(response.response.data.message)
+            setIsLoggedIn(false);
         })
     }
 
@@ -70,6 +92,8 @@ function App() {
             <SignUp userName={username2} setUsername={setUsername2} password={password2} setPassword={setPassword2}
                     handleSignUp={handleSignUp}/>
             <h1 style={{textAlign: "center"}}>{content}</h1>
+            {isLoggedIn ?
+                <Button variant="primary" onClick={handleCheckAuthenticatedStatus}>Check authenticated</Button> : null}
         </div>
     );
 }
