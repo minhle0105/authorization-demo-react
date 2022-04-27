@@ -13,6 +13,8 @@ function App() {
     const [username2, setUsername2] = useState('');
     const [password2, setPassword2] = useState('');
 
+    const [content, setContent] = useState('');
+
     const HOST = "http://localhost:3001";
 
     const handleSignIn = (e) => {
@@ -20,10 +22,14 @@ function App() {
         Axios.post(HOST + '/sign-in', {
             username: username1,
             password: password1
-        }).then(() => {
+        }).then((response) => {
             setUsername1('');
             setPassword1('');
-            console.log("Sign In successfully");
+            setContent(response.data.message)
+        }).catch((response) => {
+            setUsername1('');
+            setPassword1('');
+            setContent(response.response.data.message)
         })
     }
 
@@ -32,19 +38,24 @@ function App() {
         Axios.post(HOST + '/sign-up', {
             username: username2,
             password: password2
-        }).then(() => {
+        }).then((response) => {
             setUsername2('');
             setPassword2('');
-            console.log("Sign Up successfully")
-        }).catch(() => {
-            console.log("Failed to Sign Up");
+            setContent(response.data.message)
+        }).catch((response) => {
+            setUsername2('');
+            setPassword2('');
+            setContent(response.response.data.message)
         })
     }
 
     return (
         <div className="container">
-            <SignIn userName={username1} setUsername={setUsername1} password={password1} setPassword={setPassword1} handleSignIn={handleSignIn} />
-            <SignUp userName={username2} setUsername={setUsername2} password={password2} setPassword={setPassword2} handleSignUp={handleSignUp} />
+            <SignIn userName={username1} setUsername={setUsername1} password={password1} setPassword={setPassword1}
+                    handleSignIn={handleSignIn}/>
+            <SignUp userName={username2} setUsername={setUsername2} password={password2} setPassword={setPassword2}
+                    handleSignUp={handleSignUp}/>
+            <h1 style={{textAlign: "center"}}>{content}</h1>
         </div>
     );
 }
