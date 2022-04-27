@@ -1,5 +1,5 @@
 import './App.css';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {SignIn} from "../SignIn/SignIn";
 import {SignUp} from "../SignUp/SignUp";
 import Axios from 'axios';
@@ -14,8 +14,21 @@ function App() {
     const [password2, setPassword2] = useState('');
 
     const [content, setContent] = useState('');
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const HOST = "http://localhost:3001";
+
+    Axios.defaults.withCredentials = true;
+
+    useEffect(() => {
+        Axios.get(HOST + '/sign-in')
+            .then((response) => {
+                setIsLoggedIn(response.data.loggedIn);
+                if (isLoggedIn) {
+                    setContent(response.data.user[0].username);
+                }
+            })
+    }, [isLoggedIn]);
 
     const handleSignIn = (e) => {
         e.preventDefault();
@@ -25,7 +38,8 @@ function App() {
         }).then((response) => {
             setUsername1('');
             setPassword1('');
-            setContent(response.data.message)
+            setContent(response.data.message);
+            setIsLoggedIn(true);
         }).catch((response) => {
             setUsername1('');
             setPassword1('');
