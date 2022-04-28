@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import Axios from "axios";
 import {Button} from "react-bootstrap";
 
-export const Home = ({role, token, isAuthorized}) => {
+export const Home = ({role, isAuthorized}) => {
     const navigate = useNavigate();
     const HOST = "http://localhost:3001";
     useEffect(() => {

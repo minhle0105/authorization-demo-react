@@ -31,14 +31,14 @@ function App() {
 
     Axios.defaults.withCredentials = true;
     if (isAuthorized) {
-        return <Home token={token} isAuthorized={isAuthorized} role={role}/>;
+        return <Home isAuthorized={isAuthorized} role={role}/>;
     }
 
 
     return (
         <div className="container">
             <Routes>
-                <Route path="/home" element={<Home token={token} isAuthorized={isAuthorized} role={role}/>}/>
+                <Route path="/home" element={<Home isAuthorized={isAuthorized} role={role}/>}/>
                 <Route path="/sign-in" element={<SignIn setToken={setToken} setRole={setRole}/>}/>
 
             </Routes>
