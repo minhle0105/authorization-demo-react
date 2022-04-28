@@ -16,7 +16,6 @@ function App() {
 
     const [content, setContent] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const HOST = "http://localhost:3001";
 
@@ -25,7 +24,6 @@ function App() {
     useEffect(() => {
         Axios.get(HOST + '/sign-in')
             .then((response) => {
-                console.log(response);
                 setIsLoggedIn(response.data.loggedIn);
                 if (isLoggedIn) {
                     setContent(response.data.user[0].username);
@@ -51,7 +49,6 @@ function App() {
             username: username1,
             password: password1
         }).then((response) => {
-            console.log(response)
             setUsername1('');
             setPassword1('');
             if (response.data.auth) {
