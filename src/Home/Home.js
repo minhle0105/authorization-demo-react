@@ -1,9 +1,10 @@
 import {useEffect} from "react";
+import {useNavigate} from "react-router-dom";
 import Axios from "axios";
 import {Button} from "react-bootstrap";
 
 export const Home = ({role, token, isAuthorized}) => {
-    console.log("HOME")
+    const navigate = useNavigate();
     const HOST = "http://localhost:3001";
     useEffect(() => {
         Axios.get(HOST + '/sign-in')
@@ -27,6 +28,11 @@ export const Home = ({role, token, isAuthorized}) => {
                 :
                 <div>
                     <h1>Home page for users</h1>
+                    <Button onClick={(e) => {
+                        e.preventDefault();
+                        navigate("/sign-in");
+                    }
+                    }>Admin</Button>
                 </div>
             }
 
