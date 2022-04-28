@@ -1,19 +1,55 @@
 import {Button, Form} from "react-bootstrap";
+import PropTypes from "prop-types";
+import Axios from "axios";
+import {useState} from "react";
 
-export const SignIn = ({userName, setUsername, password, setPassword, handleSignIn}) => {
+export const SignIn = ({setToken, setRole}) => {
+
+
+    const HOST = "http://localhost:3001";
+    const [username1, setUsername1] = useState('');
+    const [password1, setPassword1] = useState('');
+    const [content, setContent] = useState('');
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const handleSignIn = (e) => {
+        e.preventDefault();
+        Axios.post(HOST + '/sign-in', {
+            username: username1,
+            password: password1
+        }).then((response) => {
+            setUsername1('');
+            setPassword1('');
+            if (response.data.auth) {
+                setContent(response.data.message);
+                setIsLoggedIn(true);
+                sessionStorage.setItem("jwtToken", response.data.token);
+                setRole(response.data.result[0].role);
+                setToken(sessionStorage.getItem("jwtToken"));
+            } else {
+                setIsLoggedIn(false);
+            }
+        }).catch((response) => {
+            setUsername1('');
+            setPassword1('');
+            setContent(response.response.data.message)
+            setIsLoggedIn(false);
+        })
+    }
+
+
     return (
         <Form onSubmit={handleSignIn}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Username</Form.Label>
-                <Form.Control type="text" value={userName} onChange={(e) => {
-                    setUsername(e.target.value);
+                <Form.Control type="text" value={username1} onChange={(e) => {
+                    setUsername1(e.target.value);
                 }} />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="password" value={password} onChange={(e) => {
-                    setPassword(e.target.value);
+                <Form.Control type="password" value={password1} onChange={(e) => {
+                    setPassword1(e.target.value);
                 }} />
             </Form.Group>
             <Button variant="primary" type="submit">
@@ -22,3 +58,7 @@ export const SignIn = ({userName, setUsername, password, setPassword, handleSign
         </Form>
     )
 }
+
+// SignIn.propTypes = {
+//     setToken: PropTypes.func.isRequired
+// }
