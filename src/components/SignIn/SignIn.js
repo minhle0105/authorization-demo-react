@@ -1,5 +1,4 @@
 import {Button, Form} from "react-bootstrap";
-import PropTypes from "prop-types";
 import Axios from "axios";
 import {useState} from "react";
 import {Navigate} from "react-router-dom";
@@ -44,14 +43,14 @@ export const SignIn = ({role, setToken, setRole}) => {
         <Form onSubmit={handleSignIn}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Username</Form.Label>
-                <Form.Control type="text" value={username1} onChange={(e) => {
+                <Form.Control required type="text" value={username1} onChange={(e) => {
                     setUsername1(e.target.value);
                 }}/>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="password" value={password1} onChange={(e) => {
+                <Form.Control required type="password" value={password1} onChange={(e) => {
                     setPassword1(e.target.value);
                 }}/>
             </Form.Group>

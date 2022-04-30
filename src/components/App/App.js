@@ -39,7 +39,11 @@ function App() {
             <Routes>
                 <Route index element={<Home/>} />
                 <Route path="/home" element={<Home/>}/>
-                <Route path="/sign-in" element={<SignIn role={role} setToken={setToken} setRole={setRole}/>}/>
+                <Route path="/sign-in" element={
+                    <ProtectedRoute redirectPath={'/' + role} isAllowed={!token || !role }>
+                        <SignIn role={role} setToken={setToken} setRole={setRole}/>
+                    </ProtectedRoute>
+                }/>
                 <Route path="/sign-up" element={
                     <ProtectedRoute redirectPath="/sign-in" isAllowed={token && role === 'admin'}>
                         <SignUp host={HOST} />
@@ -62,16 +66,20 @@ function App() {
 
 const Navigation = () => {
     return (
-        <Navbar bg="light" variant="light">
+        <Navbar collapseOnSelect expand="sm" bg="light" variant="light">
             <Container>
+                <Navbar.Toggle aria-controls='responsive-navbar-nav' />
                 <Navbar.Brand as={Link} to="/home">The Ton</Navbar.Brand>
-                <Nav className="me-auto">
-                    <NavLink as={Link} to="/home">Home</NavLink>
-                    <NavLink as={Link} to="/sign-in">Sign In</NavLink>
-                    <NavLink as={Link} to="/sign-up">Sign Up</NavLink>
-                    <NavLink as={Link} to="/admin">Admin</NavLink>
-                    <NavLink as={Link} to="/moderator" >Moderator</NavLink>
-                </Nav>
+                <Navbar.Collapse id="responsive-navbar-nav">
+                    <Nav className="me-auto">
+                        <NavLink as={Link} to="/home">Home</NavLink>
+                        <NavLink as={Link} to="/sign-in">Sign In</NavLink>
+                        <NavLink as={Link} to="/sign-up">Sign Up</NavLink>
+                        <NavLink as={Link} to="/admin">Admin</NavLink>
+                        <NavLink as={Link} to="/moderator" >Moderator</NavLink>
+                    </Nav>
+                </Navbar.Collapse>
+
             </Container>
         </Navbar>
     )
