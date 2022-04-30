@@ -1,18 +1,31 @@
 import {Button, Form} from "react-bootstrap";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Axios from "axios";
 
 export const SignUp = ({host}) => {
-
-
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [role, setRole] = useState('');
     const [message, setMessage] = useState('');
+    const [roles, setRoles] = useState([]);
+
+    useEffect(() => {
+        Axios.get(host + "/roles")
+            .then((response) => {
+                let arr = [];
+                for (let i = 0; i < response.data.length; i++) {
+                    arr.push(response.data[i].role);
+                }
+                setRoles(arr);
+            })
+    }, [])
+
     const handleSignUp = (e) => {
         e.preventDefault();
         Axios.post(host + "/sign-up", {
             username: username,
-            password: password
+            password: password,
+            role: role
         }).then((response) => {
             if (response.status === 201) {
                 setMessage('Successfully Registered');
@@ -41,8 +54,19 @@ export const SignUp = ({host}) => {
                     setPassword(e.target.value);
                 }} />
             </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicPassword1">
+                <label htmlFor="role">Select Role</label><br/>
+                <select id="role" onChange={(e) => {
+                    setRole(e.target.value);
+                }}>
+                    {roles.map((value, key) => (
+                        <option key={key} value={value}>{value}</option>
+                    ))}
+                </select>
+            </Form.Group>
             <Button variant="primary" type="submit">
-                Sign Up
+                Register New Admin
             </Button>
             {message ? <h3>{message}</h3> : null}
         </Form>

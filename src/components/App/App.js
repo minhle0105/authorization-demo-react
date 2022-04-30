@@ -40,7 +40,11 @@ function App() {
                 <Route index element={<Home/>} />
                 <Route path="/home" element={<Home/>}/>
                 <Route path="/sign-in" element={<SignIn role={role} setToken={setToken} setRole={setRole}/>}/>
-                <Route path="/sign-up" element={<SignUp host={HOST} />} />
+                <Route path="/sign-up" element={
+                    <ProtectedRoute redirectPath="/sign-in" isAllowed={token && role === 'admin'}>
+                        <SignUp host={HOST} />
+                    </ProtectedRoute>
+                }/>
                 <Route path="/admin" element={
                     <ProtectedRoute redirectPath="/home" isAllowed={token && role === 'admin'}>
                         <Admin setToken={setToken} setRole={setRole}/>
@@ -60,7 +64,7 @@ const Navigation = () => {
     return (
         <Navbar bg="light" variant="light">
             <Container>
-                <Navbar.Brand href="#home">Navbar</Navbar.Brand>
+                <Navbar.Brand as={Link} to="/home">The Ton</Navbar.Brand>
                 <Nav className="me-auto">
                     <NavLink as={Link} to="/home">Home</NavLink>
                     <NavLink as={Link} to="/sign-in">Sign In</NavLink>
