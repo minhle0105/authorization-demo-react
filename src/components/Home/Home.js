@@ -1,8 +1,4 @@
-import {useNavigate} from "react-router-dom";
-import {Button} from "react-bootstrap";
-
 export const Home = () => {
-    const navigate = useNavigate();
     return (
         <div>
             <div>

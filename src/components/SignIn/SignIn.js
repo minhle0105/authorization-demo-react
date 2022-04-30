@@ -2,10 +2,9 @@ import {Button, Form} from "react-bootstrap";
 import PropTypes from "prop-types";
 import Axios from "axios";
 import {useState} from "react";
+import {Navigate} from "react-router-dom";
 
-export const SignIn = ({setToken, setRole}) => {
-
-
+export const SignIn = ({role, setToken, setRole}) => {
     const HOST = "http://localhost:3001";
     const [username1, setUsername1] = useState('');
     const [password1, setPassword1] = useState('');
@@ -26,16 +25,20 @@ export const SignIn = ({setToken, setRole}) => {
                 setRole(response.data.result[0].role);
                 setToken(sessionStorage.getItem("jwtToken"));
             } else {
+                setContent(response.data.message);
                 setIsLoggedIn(false);
             }
-        }).catch((response) => {
+        }).catch((error) => {
             setUsername1('');
             setPassword1('');
-            setContent(response.response.data.message)
+            setContent(error.response.data.message)
             setIsLoggedIn(false);
         })
     }
-
+    if (isLoggedIn) {
+        const redirectPath = "/" + role;
+        return <Navigate to={redirectPath} replace />;
+    }
 
     return (
         <Form onSubmit={handleSignIn}>
@@ -43,19 +46,21 @@ export const SignIn = ({setToken, setRole}) => {
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="text" value={username1} onChange={(e) => {
                     setUsername1(e.target.value);
-                }} />
+                }}/>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" value={password1} onChange={(e) => {
                     setPassword1(e.target.value);
-                }} />
+                }}/>
             </Form.Group>
             <Button variant="primary" type="submit">
                 Sign In
             </Button>
+            {content ? <h1>{content}</h1> : null}
         </Form>
+
     )
 }
 

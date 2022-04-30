@@ -9,6 +9,8 @@ import {useEffect} from 'react'
 import {Container, Nav, Navbar, NavLink} from "react-bootstrap";
 import {Admin} from "../Admin/Admin";
 import {Moderator} from "../Moderator/Moderator";
+import {ProtectedRoute} from "../ProtecteRoute/ProtectedRoute";
+import {SignUp} from "../SignUp/SignUp";
 
 function App() {
 
@@ -16,36 +18,39 @@ function App() {
 
     const [role, setRole] = useState('');
 
-    const [isAuthorized, setIsAuthorized] = useState(false)
-
     const HOST = "http://localhost:3001";
     useEffect(() => {
         if (token) {
             Axios.get(HOST + '/sign-in')
                 .then((response) => {
                     if (response.data.loggedIn) {
-                        setIsAuthorized(true);
+                        setRole(response.data.user[0].role);
                     }
                 })
         }
-
-
     }, [token]);
 
     Axios.defaults.withCredentials = true;
-    if (isAuthorized) {
-        return <Home isAuthorized={isAuthorized} role={role} setRole={setRole} />;
-    }
 
 
     return (
         <div className="container">
             <Navigation />
             <Routes>
-                <Route path="/home" element={<Home isAuthorized={isAuthorized} role={role} setRole={setRole}/>}/>
-                <Route path="/sign-in" element={<SignIn setToken={setToken} setRole={setRole}/>}/>
-                <Route path="/admin" element={<Admin/>}/>
-                <Route path="/moderator" element={<Moderator/>}/>
+                <Route index element={<Home/>} />
+                <Route path="/home" element={<Home/>}/>
+                <Route path="/sign-in" element={<SignIn role={role} setToken={setToken} setRole={setRole}/>}/>
+                <Route path="/sign-up" element={<SignUp host={HOST} />} />
+                <Route path="/admin" element={
+                    <ProtectedRoute redirectPath="/home" isAllowed={token && role === 'admin'}>
+                        <Admin setToken={setToken} setRole={setRole}/>
+                    </ProtectedRoute>
+                }/>
+                <Route path="/moderator" element={
+                    <ProtectedRoute redirectPath="/home" isAllowed={token && role === 'moderator'}>
+                        <Moderator setToken={setToken} setRole={setRole}/>
+                    </ProtectedRoute>
+                }/>
             </Routes>
         </div>
     );
@@ -58,8 +63,9 @@ const Navigation = () => {
                 <Navbar.Brand href="#home">Navbar</Navbar.Brand>
                 <Nav className="me-auto">
                     <NavLink as={Link} to="/home">Home</NavLink>
-                    <NavLink as={Link} to="/sign-in" >Sign In</NavLink>
-                    <NavLink as={Link} to="/admin" >Admin</NavLink>
+                    <NavLink as={Link} to="/sign-in">Sign In</NavLink>
+                    <NavLink as={Link} to="/sign-up">Sign Up</NavLink>
+                    <NavLink as={Link} to="/admin">Admin</NavLink>
                     <NavLink as={Link} to="/moderator" >Moderator</NavLink>
                 </Nav>
             </Container>
