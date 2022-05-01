@@ -19,19 +19,8 @@ function App() {
     const [role, setRole] = useState('');
 
     const HOST = "http://localhost:3001";
-    useEffect(() => {
-        if (token) {
-            Axios.get(HOST + '/sign-in')
-                .then((response) => {
-                    if (response.data.loggedIn) {
-                        setRole(response.data.user[0].role);
-                    }
-                })
-        }
-    }, [token]);
 
     Axios.defaults.withCredentials = true;
-
 
     return (
         <div className="container">
@@ -46,7 +35,7 @@ function App() {
                 }/>
                 <Route path="/sign-up" element={
                     <ProtectedRoute redirectPath="/sign-in" isAllowed={token && role === 'admin'}>
-                        <SignUp host={HOST} />
+                        <SignUp jwtToken={token} host={HOST} />
                     </ProtectedRoute>
                 }/>
                 <Route path="/admin" element={

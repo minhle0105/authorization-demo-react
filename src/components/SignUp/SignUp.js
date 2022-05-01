@@ -2,7 +2,7 @@ import {Button, Form} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import Axios from "axios";
 
-export const SignUp = ({host}) => {
+export const SignUp = ({host, jwtToken}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('');
@@ -10,7 +10,11 @@ export const SignUp = ({host}) => {
     const [roles, setRoles] = useState([]);
 
     useEffect(() => {
-        Axios.get(host + "/roles")
+        Axios.get(host + "/roles", {
+            headers: {
+                "authorization": jwtToken
+            }
+        })
             .then((response) => {
                 let arr = [];
                 for (let i = 0; i < response.data.length; i++) {
@@ -30,6 +34,10 @@ export const SignUp = ({host}) => {
                 username: username,
                 password: password,
                 role: role
+            }, {
+                headers: {
+                    "authorization": jwtToken
+                }
             }).then((response) => {
                 if (response.status === 201) {
                     setMessage('Successfully Registered');

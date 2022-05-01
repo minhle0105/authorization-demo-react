@@ -62,7 +62,3 @@ export const SignIn = ({role, setToken, setRole}) => {
 
     )
 }
-
-// SignIn.propTypes = {
-//     setToken: PropTypes.func.isRequired
-// }
