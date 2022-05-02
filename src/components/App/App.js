@@ -21,6 +21,10 @@ function App() {
 
     Axios.defaults.withCredentials = true;
 
+    const handleSignOut = () => {
+        Axios.get(HOST + "/sign-out").then(r => {})
+    }
+
     return (
         <div className="container">
             <Navigation />
@@ -39,12 +43,12 @@ function App() {
                 }/>
                 <Route path="/admin" element={
                     <ProtectedRoute redirectPath="/home" isAllowed={token && role === 'admin'}>
-                        <Admin setToken={setToken} setRole={setRole}/>
+                        <Admin setToken={setToken} setRole={setRole} handleSignOut={handleSignOut}/>
                     </ProtectedRoute>
                 }/>
                 <Route path="/moderator" element={
                     <ProtectedRoute redirectPath="/home" isAllowed={token && role === 'moderator'}>
-                        <Moderator setToken={setToken} setRole={setRole}/>
+                        <Moderator setToken={setToken} setRole={setRole} handleSignOut={handleSignOut}/>
                     </ProtectedRoute>
                 }/>
             </Routes>
