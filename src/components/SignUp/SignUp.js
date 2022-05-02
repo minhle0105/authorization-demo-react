@@ -40,7 +40,7 @@ export const SignUp = ({host, jwtToken}) => {
                 }
             }).then((response) => {
                 if (response.status === 201) {
-                    setMessage('Successfully Registered');
+                    setMessage(response.data.message);
                 }
                 else {
                     setMessage(response.data.message);

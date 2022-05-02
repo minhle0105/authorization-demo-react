@@ -5,7 +5,6 @@ import Axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Routes, Route, Link} from "react-router-dom";
 import {Home} from "../Home/Home";
-import {useEffect} from 'react'
 import {Container, Nav, Navbar, NavLink} from "react-bootstrap";
 import {Admin} from "../Admin/Admin";
 import {Moderator} from "../Moderator/Moderator";
