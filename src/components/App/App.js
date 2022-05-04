@@ -23,6 +23,9 @@ function App() {
 
     const handleSignOut = () => {
         Axios.get(HOST + "/sign-out").then(r => {})
+        sessionStorage.removeItem("jwtToken");
+        setToken('');
+        setRole('');
     }
 
     return (
